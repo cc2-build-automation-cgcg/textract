@@ -12,6 +12,9 @@ import chardet
 
 from .. import exceptions
 
+import logging
+_log = logging.getLogger(__name__)
+
 
 class BaseParser(object):
     """The :class:`.BaseParser` abstracts out some common functionality
@@ -48,7 +51,7 @@ class BaseParser(object):
         return self.encode(unicode_string, output_encoding)
 
     def decode(self, text, input_encoding=None):
-        """Decode ``text`` using the `chardet
+        """Decode ``text`` using the `chardet`
         <https://github.com/chardet/chardet>`_ package.
         """
         # only decode byte strings into unicode if it hasn't already
@@ -66,7 +69,11 @@ class BaseParser(object):
 
         # use chardet to automatically detect the encoding text if no encoding is provided
         result = chardet.detect(text)
-        return text.decode(result['encoding'])
+        encoding = result.get('encoding', None)
+        if not encoding:
+            _log.warning(f'chardet failed to detect encoding. Using UTF-8.')
+            encoding = 'utf8'
+        return text.decode(encoding)
 
 
 class ShellParser(BaseParser):

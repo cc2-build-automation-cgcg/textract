@@ -8,7 +8,8 @@
 textract
 ========
 
-Extract text from any document. No muss. No fuss.
+Extract text from most documents, with little fuss.
+
 
 `Full documentation <http://textract.readthedocs.org>`__.
 
